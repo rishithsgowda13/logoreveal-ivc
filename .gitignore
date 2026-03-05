@@ -1,0 +1,25 @@
+# Node dependencies
+node_modules/
+.npm/
+
+# Build output
+dist/
+dist-ssr/
+*.local
+
+# IDEs and Editors
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
+
+# Environment variables
+.env
+.env.production
+.env.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
