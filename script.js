@@ -1,5 +1,12 @@
 gsap.registerPlugin(ScrollTrigger);
 
+// Force scroll to top on every refresh for start of animation
+if (history.scrollRestoration) {
+    history.scrollRestoration = 'manual';
+}
+window.scrollTo(0, 0);
+
+
 /* ═══════════════════════════════════════════════
    SPARK PARTICLES SYSTEM (OPTIMIZED FOR SMOOTHNESS)
    ═══════════════════════════════════════════════ */
@@ -53,7 +60,7 @@ function spawnAmbient(minX, maxX) {
     spark.className = 'spark';
     container.appendChild(spark);
 
-    const size = Math.random() * 2 + 0.5;
+    const size = Math.random() * 4 + 1.5; // Slightly larger for better visibility
     const startX = minX + Math.random() * (maxX - minX);
     const startY = Math.random() * window.innerHeight;
 
@@ -81,17 +88,20 @@ function spawnAmbient(minX, maxX) {
 }
 
 function createAmbientSpark() {
-    // Side flow - explicitly balanced
-    spawnAmbient(0, window.innerWidth * 0.25); // LEFT EDGE
-    spawnAmbient(window.innerWidth * 0.75, window.innerWidth); // RIGHT EDGE
+    // Spawn multiple sparks per tick for high density
+    for (let i = 0; i < 2; i++) {
+        // Side flow - explicitly balanced
+        spawnAmbient(0, window.innerWidth * 0.25); // LEFT EDGE
+        spawnAmbient(window.innerWidth * 0.75, window.innerWidth); // RIGHT EDGE
 
-    // Dedicated Middle Flow (Center 40% of screen)
-    const middleWidth = window.innerWidth * 0.4;
-    const middleStart = (window.innerWidth - middleWidth) / 2;
-    spawnAmbient(middleStart, middleStart + middleWidth);
+        // Dedicated Middle Flow (Center 50% of screen)
+        const middleWidth = window.innerWidth * 0.5;
+        const middleStart = (window.innerWidth - middleWidth) / 2;
+        spawnAmbient(middleStart, middleStart + middleWidth);
+    }
 
-    // Dynamic timing for a lively experience
-    setTimeout(createAmbientSpark, 250 + Math.random() * 350);
+    // Faster timing for a much more populated feel
+    setTimeout(createAmbientSpark, 150 + Math.random() * 250);
 }
 
 createAmbientSpark();
