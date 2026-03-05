@@ -81,17 +81,17 @@ function spawnAmbient(minX, maxX) {
 }
 
 function createAmbientSpark() {
-    // Side flow
-    spawnAmbient(0, window.innerWidth / 2);
-    spawnAmbient(window.innerWidth / 2, window.innerWidth);
+    // Side flow - explicitly balanced
+    spawnAmbient(0, window.innerWidth * 0.25); // LEFT EDGE
+    spawnAmbient(window.innerWidth * 0.75, window.innerWidth); // RIGHT EDGE
 
-    // Dedicated Middle Flow (Center 20% of screen)
-    const middleWidth = window.innerWidth * 0.2;
+    // Dedicated Middle Flow (Center 40% of screen)
+    const middleWidth = window.innerWidth * 0.4;
     const middleStart = (window.innerWidth - middleWidth) / 2;
     spawnAmbient(middleStart, middleStart + middleWidth);
 
     // Dynamic timing for a lively experience
-    setTimeout(createAmbientSpark, 300 + Math.random() * 400);
+    setTimeout(createAmbientSpark, 250 + Math.random() * 350);
 }
 
 createAmbientSpark();
