@@ -117,7 +117,7 @@ const tl = gsap.timeline({
         trigger: "#spacer",
         start: "top top",
         end: "bottom bottom",
-        scrub: 3.5, // Increased scrub for slowed-down, majestic inauguration feel
+        scrub: 2, // Smooth but responsive
     }
 });
 

@@ -35,9 +35,9 @@ body {
     /* GPU layer promotion */
 }
 
-/* Spacer gives us scroll room (2000vh for maximum inauguration suspense) */
+/* Spacer gives us scroll room */
 #spacer {
-    height: 2000vh;
+    height: 1200vh;
 }
 
 /* ═══════════════════════════════════════════════
