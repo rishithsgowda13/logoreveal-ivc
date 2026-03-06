@@ -107,19 +107,7 @@ const tl = gsap.timeline({
 // Event listener for Enter key to start countdown
 window.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
-        const prompt = document.getElementById('entry-prompt');
-        if (prompt) {
-            gsap.to(prompt, {
-                opacity: 0,
-                duration: 1,
-                onComplete: () => {
-                    prompt.remove();
-                    tl.play();
-                }
-            });
-        } else {
-            tl.play();
-        }
+        tl.play();
     }
 }, { once: true }); // Only trigger once
 
