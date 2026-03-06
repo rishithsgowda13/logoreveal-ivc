@@ -15,17 +15,22 @@ function createSparkBurst(count, centerX, centerY, spread = 400) {
     const colors = ['#00e5ff', '#ffffff', '#80deea'];
     const container = document.getElementById('viewport');
 
-    // Increased cap for a more satisfying 'pop' while staying smooth
-    const safeCount = Math.min(count, 80);
+    // Flexbox offset correction (viewport is centered)
+    const offsetX = -window.innerWidth / 2;
+    const offsetY = -window.innerHeight / 2;
+
+    const safeCount = Math.min(count, 40); // Capped for smooth performance
 
     for (let i = 0; i < safeCount; i++) {
         const spark = document.createElement('div');
         spark.className = 'spark';
         container.appendChild(spark);
 
-        const size = Math.random() * 3 + 1;
-        const startX = centerX !== null && centerX !== undefined ? centerX : (window.innerWidth / 2 + (Math.random() - 0.5) * 200);
-        const startY = centerY !== null && centerY !== undefined ? centerY : (window.innerHeight / 2 + (Math.random() - 0.5) * 200);
+        const size = Math.random() * 2 + 0.5;
+        const rawX = centerX !== null && centerX !== undefined ? centerX : (window.innerWidth / 2 + (Math.random() - 0.5) * 200);
+        const rawY = centerY !== null && centerY !== undefined ? centerY : (window.innerHeight / 2 + (Math.random() - 0.5) * 200);
+        const startX = offsetX + rawX;
+        const startY = offsetY + rawY;
 
         gsap.set(spark, {
             x: startX,
@@ -34,7 +39,8 @@ function createSparkBurst(count, centerX, centerY, spread = 400) {
             height: size,
             backgroundColor: colors[Math.floor(Math.random() * colors.length)],
             opacity: 1,
-            scale: 1
+            scale: 1,
+            force3D: true
         });
 
         const angle = Math.random() * Math.PI * 2;
@@ -53,6 +59,8 @@ function createSparkBurst(count, centerX, centerY, spread = 400) {
 }
 
 // Optimized ambient spark
+// IMPORTANT: #viewport uses flexbox centering, so x:0 = CENTER of screen.
+// We offset by -innerWidth/2 so x:0 maps to the actual LEFT edge.
 function spawnAmbient(minX, maxX) {
     const colors = ['#00e5ff', '#ffffff', '#80deea'];
     const container = document.getElementById('viewport');
@@ -60,9 +68,12 @@ function spawnAmbient(minX, maxX) {
     spark.className = 'spark';
     container.appendChild(spark);
 
-    const size = Math.random() * 4 + 1.5; // Slightly larger for better visibility
-    const startX = minX + Math.random() * (maxX - minX);
-    const startY = Math.random() * window.innerHeight;
+    const offsetX = -window.innerWidth / 2; // Corrects for flexbox centering
+    const offsetY = -window.innerHeight / 2;
+
+    const size = Math.random() * 2 + 0.8;
+    const startX = offsetX + minX + Math.random() * (maxX - minX);
+    const startY = offsetY + window.innerHeight * (0.4 + Math.random() * 0.6);
 
     gsap.set(spark, {
         x: startX,
@@ -71,40 +82,29 @@ function spawnAmbient(minX, maxX) {
         height: size,
         backgroundColor: colors[Math.floor(Math.random() * colors.length)],
         opacity: 0,
-        scale: 0.5
+        scale: 0.5,
+        force3D: true // GPU acceleration
     });
 
     gsap.to(spark, {
-        y: startY - (100 + Math.random() * 200),
+        y: startY - (150 + Math.random() * 300),
         x: startX + (Math.random() - 0.5) * 100,
-        opacity: 0.6,
-        scale: 1.2,
-        duration: 4 + Math.random() * 4,
+        opacity: 0.7,
+        scale: 1,
+        duration: 3 + Math.random() * 3, // Shorter lifetime = fewer active elements
         ease: "none",
-        onComplete: () => {
-            gsap.to(spark, { opacity: 0, duration: 1, onComplete: () => spark.remove() });
-        }
+        onComplete: () => spark.remove() // Instant cleanup, no fade delay
     });
 }
 
 function createAmbientSpark() {
-    // High-density ambient sparks (increased loop to 4 for inauguration feel)
-    for (let i = 0; i < 4; i++) {
-        // Explicitly heavy on the LEFT EDGE as requested
-        spawnAmbient(0, window.innerWidth * 0.35);
-        spawnAmbient(0, window.innerWidth * 0.20); // Extra Left layer
+    // 3 sparks per tick, balanced across screen (Left, Center, Right)
+    spawnAmbient(0, window.innerWidth * 0.3);          // LEFT
+    spawnAmbient(window.innerWidth * 0.35, window.innerWidth * 0.65); // CENTER
+    spawnAmbient(window.innerWidth * 0.7, window.innerWidth);         // RIGHT
 
-        // Right Edge
-        spawnAmbient(window.innerWidth * 0.8, window.innerWidth);
-
-        // Wide Center Atmosphere (Center 60%)
-        const middleWidth = window.innerWidth * 0.6;
-        const middleStart = (window.innerWidth - middleWidth) / 2;
-        spawnAmbient(middleStart, middleStart + middleWidth);
-    }
-
-    // Fast but steady timing for an immersive feel
-    setTimeout(createAmbientSpark, 200 + Math.random() * 300);
+    // Spaced out for smooth performance (~3 sparks every 500-800ms)
+    setTimeout(createAmbientSpark, 500 + Math.random() * 300);
 }
 
 createAmbientSpark();
@@ -180,20 +180,25 @@ tl.to("#left-curtain", {
         force3D: true,
         onStart: () => createSparkBurst(30, window.innerWidth, 0)
     }, "<");
+/* ─── Phase 4a : Center spark burst (anticipation) ─── */
+tl.add(() => {
+    createSparkBurst(40, window.innerWidth / 2, window.innerHeight / 2, 500);
+});
 
+/* ─── Phase 4b : Pause for spark buildup ─── */
+tl.to({}, { duration: 2 }); // 2-second delay while sparks shimmer
+
+/* ─── Phase 4c : Logo reveal (after sparks) ─── */
 tl.to("#logo-area", {
     opacity: 1,
     scale: 1,
     duration: 1.5,
-    onStart: () => {
-        // High-density center pop
-        createSparkBurst(80, window.innerWidth / 2, window.innerHeight / 2, 600);
-    }
 });
 
+/* ─── Phase 4d : Logo unblur ─── */
 tl.to("#logo-area", {
     filter: "blur(0px)",
-    duration: 1, // Faster unblur
+    duration: 1,
     ease: "power1.inOut"
 });
 
@@ -204,7 +209,6 @@ tl.to("#logo-area", { y: -50, scale: 0.65, duration: 2 })
         duration: 2,
         ease: "power2.out",
         onStart: () => {
-            // Celebratory center burst
-            createSparkBurst(60, window.innerWidth / 2, window.innerHeight * 0.7, 500);
+            createSparkBurst(30, window.innerWidth / 2, window.innerHeight * 0.7, 400);
         }
     }, "<");
