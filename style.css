@@ -266,10 +266,39 @@ body {
     position: absolute;
     border-radius: 50%;
     pointer-events: none;
-    z-index: 150;
-    /* Single lightweight glow instead of 4 heavy layers */
+    z-index: 3;
+    /* BEHIND logo (z-index: 5) so logo stays clearly visible */
     box-shadow: 0 0 6px currentColor;
     will-change: transform, opacity;
     contain: layout style;
     /* CSS containment for paint optimization */
+}
+
+/* ═══════════════════════════════════════════════
+   MOBILE RESPONSIVENESS
+   ═══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    .glass-ring {
+        width: 85vw;
+        height: 85vw;
+    }
+
+    .count-num {
+        font-size: 10rem;
+    }
+
+    #main-title {
+        font-size: 1.1rem;
+        letter-spacing: 0.15rem;
+        white-space: nowrap;
+    }
+
+    #tagline {
+        font-size: 0.65rem;
+        letter-spacing: 0.4rem;
+    }
+
+    #title-area {
+        bottom: 20%;
+    }
 }

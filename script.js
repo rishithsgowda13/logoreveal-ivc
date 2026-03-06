@@ -182,7 +182,12 @@ tl.to("#left-curtain", {
     }, "<");
 /* ─── Phase 4a : Center spark burst (anticipation) ─── */
 tl.add(() => {
-    createSparkBurst(40, window.innerWidth / 2, window.innerHeight / 2, 500);
+    // Wave 1: Tight center cluster
+    createSparkBurst(40, window.innerWidth / 2, window.innerHeight / 2, 300);
+    // Wave 2: Medium spread (slightly delayed)
+    setTimeout(() => createSparkBurst(40, window.innerWidth / 2, window.innerHeight / 2, 500), 200);
+    // Wave 3: Wide spread
+    setTimeout(() => createSparkBurst(40, window.innerWidth / 2, window.innerHeight / 2, 700), 400);
 });
 
 /* ─── Phase 4b : Pause for spark buildup ─── */
