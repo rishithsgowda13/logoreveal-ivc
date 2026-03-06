@@ -149,9 +149,8 @@ body {
 }
 
 .glass-ring {
-    width: 650px;
-    /* Increased size */
-    height: 650px;
+    width: 720px;
+    height: 720px;
     border-radius: 50%;
     background: transparent;
     border: none;
