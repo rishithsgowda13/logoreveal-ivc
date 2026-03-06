@@ -197,7 +197,7 @@ tl.to("#logo-area", {
     ease: "power1.inOut"
 });
 
-tl.to("#logo-area", { y: -50, scale: 0.65, duration: 2 })
+tl.to("#logo-area", { y: -50, scale: 0.75, duration: 2 })
     .to("#title-area", {
         opacity: 1,
         y: 0,
